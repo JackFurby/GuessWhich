@@ -1,9 +1,11 @@
 from django.conf import settings
-from channels import Group
+# from channels import Group
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 import h5py
 import time
-import cPickle
+import pickle
 import pdb
 
 from .constants import (
@@ -21,9 +23,21 @@ import traceback
 import numpy as np
 import boto.mturk.connection
 
+# channels v1
+# def log_to_terminal(socketid, message):
+#    Group(socketid).send({"text": json.dumps(message)})
 
+
+# channels v2
 def log_to_terminal(socketid, message):
-    Group(socketid).send({"text": json.dumps(message)})
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        '{}'.format(socketid),
+        {
+            'type': 'channel_message',
+            'message': message
+        }
+    )
 
 
 def get_pool_images(pool_id=1):

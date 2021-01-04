@@ -21,24 +21,24 @@ BOT_INTORDUCTION_MESSAGE = [
 ]
 
 SL_VISDIAL_CONFIG = {
-    'inputJson': os.path.join(settings.BASE_DIR, 'chatbot/data/chat_processed_params.json'),
-    'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/qbot_hre_qih_sl.t7'),
-    'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/abot_hre_qih_sl.t7'),
+    #'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/qbot_hre_qih_sl.t7'),
+    #'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/abot_hre_qih_sl.t7'),
+    'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/sl_qbot.vd'),
+    'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/sl_abot.vd'),
     'gpuid': 0,
     'backend': 'cudnn',
-    'imfeatpath': os.path.join(settings.BASE_DIR, 'chatbot/data/all_pools_vgg16_features.t7'),
 }
 
 SL_VISDIAL_LUA_PATH = "sl_evaluate.lua"
 
 
 RL_VISDIAL_CONFIG = {
-    'inputJson': os.path.join(settings.BASE_DIR, 'chatbot/data/chat_processed_params.json'),
-    'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/qbot_rl.t7'),
-    'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/abot_rl.t7'),
+    #'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/qbot_rl.t7'),
+    #'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/abot_rl.t7'),
+    'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/rl_qbot_rl.vd'),
+    'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/rl_abot_rl.vd'),
     'gpuid': 0,
     'backend': 'cudnn',
-    'imfeatpath': os.path.join(settings.BASE_DIR, 'chatbot/data/all_pools_vgg16_features.t7'),
 }
 
 RL_VISDIAL_LUA_PATH = "rl_evaluate.lua"

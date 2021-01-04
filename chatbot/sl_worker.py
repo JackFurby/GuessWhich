@@ -14,8 +14,9 @@ from django.conf import settings
 from amt.utils import log_to_terminal
 
 import amt.constants as constants
-import PyTorch
-import PyTorchHelpers
+import torch
+#import PyTorchHelpers
+import torchfile
 import pika
 import time
 import yaml
@@ -24,22 +25,13 @@ import traceback
 import signal
 import requests
 import atexit
+from chatbot.visDialModel import VisDialModel as VisDialModel
 
-VisDialModel = PyTorchHelpers.load_lua_class(
-    constants.SL_VISDIAL_LUA_PATH, 'SLConversationModel')
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-VisDialATorchModel = VisDialModel(
-    constants.SL_VISDIAL_CONFIG['inputJson'],
-    constants.SL_VISDIAL_CONFIG['qBotpath'],
-    constants.SL_VISDIAL_CONFIG['aBotpath'],
-    constants.SL_VISDIAL_CONFIG['gpuid'],
-    constants.SL_VISDIAL_CONFIG['backend'],
-    constants.SL_VISDIAL_CONFIG['imfeatpath'],
-)
+VisDialATorchModel = VisDialModel()
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(
-    host='localhost'))
-
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
 channel.queue_declare(queue='sl_chatbot_queue', durable=True)
@@ -53,8 +45,8 @@ def callback(ch, method, properties, body):
         # get the imageid here so that use the extracted features in lua script
         image_id = body['image_path'].split("/")[-1].replace(".jpg", "")
 
-        print image_id
-        print type(image_id)
+        print(image_id)
+        print(type(image_id))
 
         result = VisDialATorchModel.abot(
             image_id, body['history'], body['input_question'])
@@ -67,10 +59,10 @@ def callback(ch, method, properties, body):
         log_to_terminal(body['socketid'], {"result": json.dumps(result)})
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    except Exception, err:
-        print str(traceback.print_exc())
+    except Exception:
+        print(str(traceback.print_exc()))
 
-channel.basic_consume(callback,
-                      queue='sl_chatbot_queue')
+
+channel.basic_consume('sl_chatbot_queue', callback)
 
 channel.start_consuming()

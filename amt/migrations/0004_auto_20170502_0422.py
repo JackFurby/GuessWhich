@@ -12,17 +12,17 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='feedback',
             name='bot',
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
-        migrations.AddField(
+        migrations.AlterField(
             model_name='gameround',
             name='bot',
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
-        migrations.AddField(
+        migrations.AlterField(
             model_name='imageranking',
             name='bot',
             field=models.CharField(blank=True, max_length=100, null=True),

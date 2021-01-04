@@ -1,7 +1,7 @@
 # from __future__ import unicode_literals
 
 from django.db import models
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.postgres.fields import ArrayField
 
 
@@ -25,7 +25,7 @@ class GameRound(models.Model):
     user_picked_image = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_active = models.NullBooleanField(default=True, blank=True, null=True)
+    is_active = models.BooleanField(default=True, blank=True, null=True)
 
     def __unicode__(self):
         return "%s : %s : %s" % (self.assignment_id, self.game_id, self.round_id)
@@ -45,7 +45,7 @@ class ImageRanking(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     bot = models.CharField(max_length=100, blank=True, null=True)
     score = models.FloatField(default=0)
-    is_active = models.NullBooleanField(default=True, blank=True, null=True)
+    is_active = models.BooleanField(default=True, blank=True, null=True)
 
     def __unicode__(self):
         return "%s : %s : %s" % (self.assignment_id, self.game_id, self.level)
@@ -59,7 +59,7 @@ class ImagePool(models.Model):
     hard_pool = ArrayField(models.CharField(max_length=200), blank=True)
     obj = models.CharField(max_length=200, blank=True, null=True)
     target_image = models.CharField(max_length=200, blank=True, null=True)
-    is_active = models.NullBooleanField(default=False, blank=True, null=True)
+    is_active = models.BooleanField(default=False, blank=True, null=True)
 
 
 class Feedback(models.Model):
@@ -80,4 +80,4 @@ class Feedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     bot = models.CharField(max_length=100, blank=True, null=True)
-    is_active = models.NullBooleanField(default=True, blank=True, null=True)
+    is_active = models.BooleanField(default=True, blank=True, null=True)

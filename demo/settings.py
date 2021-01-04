@@ -7,8 +7,8 @@ import numpy as np
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Set the path of the Lua Script for both SL and RL bots
-os.environ['LUA_PATH'] = os.environ['LUA_PATH'] + ":" + os.path.join(BASE_DIR, 'chatbot', 'sl_evaluate.lua')
-os.environ['LUA_PATH'] = os.environ['LUA_PATH'] + ":" + os.path.join(BASE_DIR, 'chatbot', 'rl_evaluate.lua')
+#os.environ['LUA_PATH'] = os.environ['LUA_PATH'] + ":" + os.path.join(BASE_DIR, 'chatbot', 'sl_evaluate.lua')
+#os.environ['LUA_PATH'] = os.environ['LUA_PATH'] + ":" + os.path.join(BASE_DIR, 'chatbot', 'rl_evaluate.lua')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '3$zc7zn#v==*r2ukiezqv39g2im4zf!2%53f+h0rga&*=&(7l5'
@@ -40,7 +40,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'demo.urls'
@@ -69,8 +69,12 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test.db',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'guesswhich',
+        'USER': 'demo',
+        'PASSWORD': 'demo',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -112,7 +116,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'amt/static'),
+)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'amt/staticfiles')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -120,11 +128,12 @@ MEDIA_URL= "https://vision.ece.vt.edu/mscoco/images/"
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [("localhost", 6379)],
             "prefix": u'vicki_redis:',
-        },
-        "ROUTING": "amt.routing.channel_routing",
+        }
     },
 }
+
+ASGI_APPLICATION = "amt.routing.channel_routing"

@@ -12,19 +12,19 @@ from .utils import (
 
 from .models import Feedback, ImageRanking
 
-import constants as constants
+import amt.constants as constants
 
 import sys
 import uuid
 import os
 import traceback
 import random
-import urllib2
+import urllib
 import redis
 import json
 
 
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 class PoolImage:
@@ -43,6 +43,7 @@ def home(request, template_name="amt/index.html"):
     """
     Method called when the game starts
     """
+
     worker_id = request.GET.get('workerId', "default")
 
     if worker_id == "default":
@@ -54,9 +55,9 @@ def home(request, template_name="amt/index.html"):
             # Set the qualification so that worker cannot do the HIT again
             set_qualification_to_worker(
                 worker_id=worker_id, qualification_value=1)
-            print "Success: Setting Qualification for worker ", worker_id
+            print("Success: Setting Qualification for worker ", worker_id)
         except Exception as e:
-            print "Error: Cannot Set Qualification for worker ", worker_id
+            print("Error: Cannot Set Qualification for worker ", worker_id)
 
     '''
     Possible values of level:
@@ -100,7 +101,7 @@ def home(request, template_name="amt/index.html"):
     image_list = image_pool['pools'][level][:20]
     image_list = sorted(image_list)
     img_list = []
-    for i in xrange(len(image_list)):
+    for i in range(len(image_list)):
         img_path = constants.POOL_IMAGES_URL + str(image_list[i]) + ".jpg"
         img = PoolImage(img_path, 0, image_list[i], i+1)
         img_list.append(img)

@@ -13,29 +13,24 @@ from django.conf import settings
 from amt.utils import log_to_terminal
 
 import amt.constants as constants
-import PyTorch
-import PyTorchHelpers
+import torch
+#import PyTorchHelpers
+import torchfile
 import pika
 import time
 import yaml
 import json
 import traceback
+import signal
+import requests
+import atexit
+from chatbot.visDialModel import VisDialModel as VisDialModel
 
-RLVisDialModel = PyTorchHelpers.load_lua_class(
-    constants.RL_VISDIAL_LUA_PATH, 'RLConversationModel')
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-RLVisDialATorchModel = RLVisDialModel(
-    constants.RL_VISDIAL_CONFIG['inputJson'],
-    constants.RL_VISDIAL_CONFIG['qBotpath'],
-    constants.RL_VISDIAL_CONFIG['aBotpath'],
-    constants.RL_VISDIAL_CONFIG['gpuid'],
-    constants.RL_VISDIAL_CONFIG['backend'],
-    constants.RL_VISDIAL_CONFIG['imfeatpath'],
-)
+RLVisDialATorchModel = VisDialModel()
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(
-    host='localhost'))
-
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
 channel.queue_declare(queue='rl_chatbot_queue', durable=True)
@@ -63,10 +58,10 @@ def callback(ch, method, properties, body):
         log_to_terminal(body['socketid'], {"result": json.dumps(result)})
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    except Exception, err:
-        print str(traceback.print_exc())
+    except Exception:
+        print(str(traceback.print_exc()))
 
-channel.basic_consume(callback,
-                      queue='rl_chatbot_queue')
+
+channel.basic_consume('sl_chatbot_queue', callback)
 
 channel.start_consuming()

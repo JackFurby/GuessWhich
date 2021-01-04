@@ -12,24 +12,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Feedback',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('understand_question', models.CharField(blank=True, max_length=200, null=True)),
-                ('understand_image', models.CharField(blank=True, max_length=200, null=True)),
-                ('fluency', models.CharField(blank=True, max_length=200, null=True)),
-                ('detail', models.CharField(blank=True, max_length=200, null=True)),
-                ('accurate', models.CharField(blank=True, max_length=200, null=True)),
-                ('consistent', models.CharField(blank=True, max_length=200, null=True)),
-                ('comments', models.CharField(blank=True, max_length=200, null=True)),
-                ('worker_id', models.CharField(blank=True, max_length=100, null=True)),
-                ('assignment_id', models.CharField(blank=True, max_length=100, null=True)),
-                ('level', models.CharField(blank=True, max_length=100, null=True)),
-                ('hit_id', models.CharField(blank=True, max_length=100, null=True)),
-                ('game_id', models.CharField(blank=True, max_length=100, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-            ],
-        ),
     ]

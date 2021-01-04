@@ -20,11 +20,11 @@ We measure performance of the human-ALICE team by the number of guesses it takes
 ### Installing the essential requirements
 
 ```shell
-sudo apt-get install -y git python-pip python-dev
-sudo apt-get install -y python-dev
-sudo apt-get install -y autoconf automake libtool curl make g++ unzip
-sudo apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
-sudo apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler
+sudo dnf install -y git python3.7 python-pip python-devel
+sudo dnf install -y autoconf automake libtool curl make g++ unzip
+sudo dnf install -y gflags-devel glog-devel lmdb-libs
+sudo dnf install protobuf-devel leveldb-devel snappy-devel opencv-devel hdf5-devel protobuf-compiler
+sudo dnf install postgresql postgresql-contrib postgresql-server openssl-devel
 ```
 
 ### Install Torch
@@ -45,13 +45,22 @@ source ~/torch/install/bin/torch-activate
 ./build.sh
 ```
 
+
+### Install Pip packages
+
+(update for conda)
+
+```
+pip install -r requirements.txt
+```
+
 ### Install RabbitMQ and Redis Server
 
 ```shell
-sudo apt-get install -y redis-server rabbitmq-server
+sudo dnf install -y redis rabbitmq-server
 sudo rabbitmq-plugins enable rabbitmq_management
-sudo service rabbitmq-server restart 
-sudo service redis-server restart
+sudo service rabbitmq-server restart
+sudo systemctl start redis.service
 ```
 
 ### Lua dependencies
@@ -71,7 +80,7 @@ luarocks install cunn
 
 Note: CUDA and cuDNN is only required if you are going to use GPU
 
-Download and install CUDA and cuDNN from [nvidia website](https://developer.nvidia.com/cuda-downloads) 
+Download and install CUDA and cuDNN from [nvidia website](https://developer.nvidia.com/cuda-downloads)
 
 ### Install dependencies
 
@@ -85,8 +94,35 @@ pip install -r requirements.txt
 ### Create the database
 
 ```shell
+sudo postgresql-setup initdb
+sudo systemctl start postgresql
+sudo su - postgres
+psql
+CREATE DATABASE guesswhich;
+CREATE USER demo WITH PASSWORD 'demo';
+ALTER ROLE demo SET client_encoding TO 'utf8';
+ALTER ROLE demo SET default_transaction_isolation TO 'read committed';
+GRANT ALL PRIVILEGES ON DATABASE guesswhich TO demo;
+\q
+exit
+
 python manage.py makemigrations amt
 python manage.py migrate
+```
+
+You will need to change authentication methods in `pg_hba.conf`. `ident` for `IPv4` and `IPv6` local connections should be changed to `md5`.
+
+```
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+```
+
+Once done you will need to restart Postgress with the command
+
+```shell
+sudo systemctl restart postgresql
 ```
 
 ### Running the RabbitMQ workers and Development Server
@@ -94,8 +130,8 @@ python manage.py migrate
 Open 3 different terminal sessions and run the following commands:
 
 ```shell
-cd chatbot && python sl_worker.py
-cd chatbot && python rl_worker.py
+cd chatbot && python sl_worker.py -qstartFrom="chatbot/data/sl_qbot.vd" -startFrom="chatbot/data/sl_abot.vd"
+cd chatbot && python rl_worker.py  -qstartFrom="chatbot/data/rl_qbot.vd" -startFrom="chatbot/data/rl_abot.vd"
 python manage.py runserver
 ```
 

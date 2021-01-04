@@ -12,17 +12,17 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='feedback',
             name='is_active',
             field=models.BooleanField(default=True),
         ),
-        migrations.AddField(
+        migrations.AlterField(
             model_name='gameround',
             name='is_active',
             field=models.BooleanField(default=True),
         ),
-        migrations.AddField(
+        migrations.AlterField(
             model_name='imageranking',
             name='is_active',
             field=models.BooleanField(default=True),
