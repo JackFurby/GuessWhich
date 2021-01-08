@@ -22,14 +22,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'amt',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
-    'amt',
     'import_export',
 ]
 
@@ -126,14 +126,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL= "https://vision.ece.vt.edu/mscoco/images/"
 
+ASGI_APPLICATION = "demo.asgi.application"
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 6379)],
-            "prefix": u'vicki_redis:',
-        }
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+            #"prefix": u'vicki_redis:',
+        },
     },
 }
-
-ASGI_APPLICATION = "amt.routing.channel_routing"

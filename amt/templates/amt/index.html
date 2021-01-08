@@ -57,54 +57,58 @@
 
 {% block message_typing %}
 <script type="text/javascript">
-var show_feedback_modal = "{{ show_feedback_modal }}";
-var total_bonus_so_far = {{ total_bonus_so_far }};
-var current_bonus = {{ max_game_bonus }};
-var bonus_deduction_on_each_click = {{ bonus_deduction_on_each_click }};
-var bonus_for_correct_image_after_each_round = {{ bonus_for_correct_image_after_each_round }};
-var current_in_game_bonus = 0;
-var final_image_list = [];
-var finalImageSelected = false;
-var targetImage = "{{ target_image }}";
-var targetImageId = "{{ target_image_id }}";
-var topImage = $(".sampleImagesContainer").first().attr("id");
-var question_index = 0;
-var current_question = "";
-var current_answer = "";
-var current_user_selected_image = null;
-var current_user_sorting = {{ img_id_list | safe }};
-var current_fc7_sorting = null;
-var prev_history = "{{ caption }}";
-var scores = {{ scores | safe}};
-var current_round = 0;
-var num_of_games_in_a_hit = {{ num_of_games_in_a_hit }};
-var max_rounds = {{ max_rounds }};
-var next_game_url = null;
-var target_image_rank_list = [];
-var message_just_shown = false;
-var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-var socket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
+  var show_feedback_modal = "{{ show_feedback_modal }}";
+  var total_bonus_so_far = {{ total_bonus_so_far }};
+  var current_bonus = {{ max_game_bonus }};
+  var bonus_deduction_on_each_click = {{ bonus_deduction_on_each_click }};
+  var bonus_for_correct_image_after_each_round = {{ bonus_for_correct_image_after_each_round }};
+  var current_in_game_bonus = 0;
+  var final_image_list = [];
+  var finalImageSelected = false;
+  var targetImage = "{{ target_image }}";
+  var targetImageId = "{{ target_image_id }}";
+  var topImage = $(".sampleImagesContainer").first().attr("id");
+  var question_index = 0;
+  var current_question = "";
+  var current_answer = "";
+  var current_user_selected_image = null;
+  var current_user_sorting = {{ img_id_list | safe }};
+  var current_fc7_sorting = null;
+  var prev_history = "{{ caption }}";
+  var scores = {{ scores | safe}};
+  var current_round = 0;
+  var num_of_games_in_a_hit = {{ num_of_games_in_a_hit }};
+  var max_rounds = {{ max_rounds }};
+  var next_game_url = null;
+  var target_image_rank_list = [];
+  var message_just_shown = false;
+  var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+  var socket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
 
-socket.onopen = function() {
-    // var $toastContent = $('<span>Websocket connection established.</span>');
-    // Materialize.toast($toastContent, 5000, 'rounded');
-    socket.send(JSON.stringify({
-        "event": "ConnectionEstablished",
-        "socketid": "{{ socketid }}",
-    }));
-}
+  console.log(window.location.pathname);
+  console.log(socket);
 
-socket.onclose = function() {
+  socket.onopen = function() {
+      // var $toastContent = $('<span>Websocket connection established.</span>');
+      // Materialize.toast($toastContent, 5000, 'rounded');
+      socket.send(JSON.stringify({
+          "event": "ConnectionEstablished",
+          "socketid": "{{ socketid }}",
+      }));
+  }
+
+  socket.onclose = function() {
     var $toastContent = $('<span>Websocket connection failed. Please upgrade your internet.</span>');
     Materialize.toast($toastContent, 5000, 'rounded');
-}
+  }
 
-socket.onerror = function() {
+  socket.onerror = function() {
     var $toastContent = $('<span>Websocket connection failed. Please upgrade your internet.</span>');
     Materialize.toast($toastContent, 5000, 'rounded');
-}
+  }
 
-socket.onmessage = function(response) {
+  socket.onmessage = function(response) {
+    console.log("on message 1");
     response = JSON.parse(response.data);
     if ("result" in response) {
         result = JSON.parse(response['result']);
@@ -113,79 +117,79 @@ socket.onmessage = function(response) {
         prev_history = result['history'];
         $(".selectImage").removeClass("disabled");
     }
-}
+  }
 
 </script>
 <script type="text/javascript">
-$("body").keypress(function(e) {
-    var key = e.which;
-    var question = $("#question").val();
-    if (key == 13 && question != '' && question != null) {
-        socket.send(JSON.stringify({
-            event: "imageSubmitted",
-            socketid: "{{ socketid }}",
-            user_picked_image: current_user_selected_image,
-            final_image_list: final_image_list,
-            worker_id: worker_id,
-            assignment_id: assignment_id,
-            level: level,
-            hit_id: hit_id,
-            game_id: Number(gameId) + 1,
-            round_id: current_round,
-            question: current_question,
-            answer: current_answer,
-            history: prev_history,
-            target_image: targetImageId,
-            bot: bot,
-            task: task,
-        }));
-        current_question = question;
-        message_just_shown = false;
-        $("#question").val('');
-        $("#question").attr("disabled", "disabled");
-        $(".selectImage").addClass("disabled");
-        changeQuestionPlaceholder("Click on the image that is your best guess");
+  $("body").keypress(function(e) {
+      var key = e.which;
+      var question = $("#question").val();
+      if (key == 13 && question != '' && question != null) {
+          socket.send(JSON.stringify({
+              event: "imageSubmitted",
+              socketid: "{{ socketid }}",
+              user_picked_image: current_user_selected_image,
+              final_image_list: final_image_list,
+              worker_id: worker_id,
+              assignment_id: assignment_id,
+              level: level,
+              hit_id: hit_id,
+              game_id: Number(gameId) + 1,
+              round_id: current_round,
+              question: current_question,
+              answer: current_answer,
+              history: prev_history,
+              target_image: targetImageId,
+              bot: bot,
+              task: task,
+          }));
+          current_question = question;
+          message_just_shown = false;
+          $("#question").val('');
+          $("#question").attr("disabled", "disabled");
+          $(".selectImage").addClass("disabled");
+          changeQuestionPlaceholder("Click on the image that is your best guess");
 
-        if (current_round == max_rounds) {
-            $("#question").attr("disabled", "disabled");
-        }
-        // Create div of the user's message
-        var userChatDiv = $('<div class="row chat_row_human"></div>');
-        var userColDiv = $('<div class="col s9 l7 right"></div>');
-        var userCardPanelDiv = $('<div class="card-panel light-blue darken-4 right"></div>');
+          if (current_round == max_rounds) {
+              $("#question").attr("disabled", "disabled");
+          }
+          // Create div of the user's message
+          var userChatDiv = $('<div class="row chat_row_human"></div>');
+          var userColDiv = $('<div class="col s9 l7 right"></div>');
+          var userCardPanelDiv = $('<div class="card-panel light-blue darken-4 right"></div>');
 
-        $(userCardPanelDiv).prepend('<span class="white-text"><b>Q:' + (current_round + 1) + "/" + max_rounds + " </b>" + question + '</span>');
-        $(userColDiv).prepend(userCardPanelDiv);
-        $(userChatDiv).prepend(userColDiv);
-        $(".messages").append(userChatDiv);
+          $(userCardPanelDiv).prepend('<span class="white-text"><b>Q:' + (current_round + 1) + "/" + max_rounds + " </b>" + question + '</span>');
+          $(userColDiv).prepend(userCardPanelDiv);
+          $(userChatDiv).prepend(userColDiv);
+          $(".messages").append(userChatDiv);
 
-        // Now scroll to the bottom of the messages
-        var wtf = $('.messages');
-        var height = wtf[0].scrollHeight;
-        wtf.scrollTop(height);
+          // Now scroll to the bottom of the messages
+          var wtf = $('.messages');
+          var height = wtf[0].scrollHeight;
+          wtf.scrollTop(height);
 
-        if (current_user_selected_image == targetImageId) {
-            current_in_game_bonus += bonus_for_correct_image_after_each_round;
-        }
+          if (current_user_selected_image == targetImageId) {
+              current_in_game_bonus += bonus_for_correct_image_after_each_round;
+          }
 
-        // $("#total_bonus_so_far").text(current_in_game_bonus);
+          // $("#total_bonus_so_far").text(current_in_game_bonus);
 
-        current_user_selected_image = null;        
-        current_round += 1
+          current_user_selected_image = null;
+          current_round += 1
 
-        socket.send(JSON.stringify({
-            event: "questionSubmitted",
-            socketid: "{{ socketid }}",
-            images: {{img_id_list | safe}},
-            scores: scores,
-            question: question,
-            target_image: targetImage,
-            prev_history: prev_history,
-            bot: bot,
-            task: task,
-        }));
-    }
-});
+          socket.send(JSON.stringify({
+              event: "questionSubmitted",
+              socketid: "{{ socketid }}",
+              images: {{img_id_list | safe}},
+              scores: scores,
+              question: question,
+              target_image: targetImage,
+              prev_history: prev_history,
+              bot: bot,
+              task: task,
+          }));
+      }
+  });
 </script>
 
 <script type="text/javascript">
@@ -249,7 +253,7 @@ function changeQuestionPlaceholder(placeholder) {
 
                 if (!message_just_shown && current_round != max_rounds) {
                     message = "You can update your guess now. You will get a bonus if you correctly guess the target image. Bonus won will be shown at the end of the game. Once you’re ready, ask me a question! You can only ask me questions (avoid using “Thanks”, “Okay” for example), and please keep your questions relevant to image content, or your work will be rejected."
-                    // show_bot_message(message);                    
+                    // show_bot_message(message);
                 }
                 message_just_shown = true;
 
@@ -313,7 +317,7 @@ function changeQuestionPlaceholder(placeholder) {
                         bonus: current_bonus,
                     }));
 
-                    gameId = Number(gameId) + 1;       
+                    gameId = Number(gameId) + 1;
                     next_game_url = updateQueryStringParameter(window.location.href, 'gameId', gameId);
                     // $("#plotModal").modal('open');
                     changeQuestionPlaceholder("Click above button to proceed.");

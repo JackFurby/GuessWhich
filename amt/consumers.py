@@ -1,35 +1,31 @@
-from django.utils import timezone
-from django.conf import settings
-
-from .utils import log_to_terminal, fc7_sort
-from .sender import chatbot
-import amt.constants as constants
-from .models import GameRound, ImageRanking
-
-from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
-
 import json
 import redis
 import datetime
 import os
-import shutil
-import pdb
+from channels.generic.websocket import WebsocketConsumer
+from asgiref.sync import async_to_sync
+from django.utils import timezone
+from django.conf import settings
+
+from .utils import log_to_terminal
+from .models import GameRound, ImageRanking
+from .sender import chatbot
+import amt.constants as constants
 
 
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 class ChatConsumer(WebsocketConsumer):
-    groups = ["broadcast"]
-
     def connect(self):
-        # Called on connection.
         print("===== ChatConsumer connect! =====")
         self.accept()
-        print("===== ChatConsumer again! =====")
 
-    def receive(self, text_data=None):
+    def disconnect(self, close_code):
+        pass
+
+    def receive(self, text_data):
+        print("===== ChatConsumer receive! =====")
         self.send(text_data="Hello world!")
         # Called with either text_data or bytes_data for each frame
         "Method called when there is message from the SocketIO client"
@@ -94,7 +90,3 @@ class ChatConsumer(WebsocketConsumer):
                 score=body['bonus'],
                 task=body['task'],
             )
-
-    def disconnect(self, close_code):
-        "Method invoked when the client disconnects the socket connection"
-        pass
