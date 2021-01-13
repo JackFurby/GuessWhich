@@ -15,7 +15,6 @@ from amt.utils import log_to_terminal
 import amt.constants as constants
 import torch
 #import PyTorchHelpers
-import torchfile
 import pika
 import time
 import yaml
