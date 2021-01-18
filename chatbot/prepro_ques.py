@@ -1,18 +1,19 @@
 import json
 import argparse
 import re
-from nltk.tokenize import word_tokenize
+import nltk
 
 regex = re.compile('[^\sa-zA-Z]')
+nltk.download('punkt')
 
-def main():
-    ques = regex.sub('',args.question) + ' ?'
-    question = word_tokenize(ques.replace('?', ' ? ').strip().lower())[:args.ques_len]
-    # question = word_tokenize(args.question.replace('?', ' ? ').strip().lower())[:args.ques_len]
-    history_facts = args.history.replace('?', ' ? ').split(args.delimiter)
+
+def main(question_args='', ques_len=15, history_args='', fact_len=30, delimiter='||||'):
+    ques = regex.sub('', question_args) + ' ?'
+    question = nltk.tokenize.word_tokenize(ques.replace('?', ' ? ').strip().lower())[:ques_len]
+    history_facts = history_args.replace('?', ' ? ').split(delimiter)
     history, questions = [], []
     for i in history_facts:
-        fact = word_tokenize(i.strip().lower())[:args.fact_len]
+        fact = nltk.tokenize.word_tokenize(i.strip().lower())[:fact_len]
         if len(fact) != 0:
             history.append(fact)
             try:
@@ -22,9 +23,9 @@ def main():
 
     num_hist = min(len(history), 10)
     num_ques = num_hist - 1 if num_hist > 0 else 0
-    json.dump({'question': question, 'history': history[-num_hist:], 'questions': questions[-num_ques:]}, open('ques_feat.json', 'w'))
+    return(json.dump({'question': question, 'history': history[-num_hist:], 'questions': questions[-num_ques:]}, open('ques_feat.json', 'w')))
 
-    
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-question', type=str, default='')
@@ -33,4 +34,4 @@ if __name__ == "__main__":
     parser.add_argument('-fact_len', type=int, default=30)
     parser.add_argument('-delimiter', type=str, default='||||')
     args = parser.parse_args()
-    main()
+    main(args.question, args.ques_len, args.history, args.fact_len, args.delimiter)

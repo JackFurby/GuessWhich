@@ -43,7 +43,7 @@ def callback(ch, method, properties, body):
         # Get the imageid here so that use the extracted features in lua script
         image_id = body['image_path'].split("/")[-1].replace(".jpg", "")
 
-        result = RLVisDialATorchModel.abot(
+        result = RLVisDialATorchModel.answererModel(
             image_id,
             body['history'],
             body['input_question'])

@@ -81,6 +81,11 @@ class VisDialDataset(Dataset):
             'num_rounds_%s': '%s_num_rounds'
         }
 
+
+
+        """
+
+
         # Processing every split in subsets
         for dtype in subsets:  # dtype is in [train, val, test]
             print("\nProcessing split [%s]..." % dtype)
@@ -158,6 +163,8 @@ class VisDialDataset(Dataset):
         #     self.annotations_reader = DenseAnnotationsReader(params["inputDenseJson"])
         # else:
         #     self.annotations_reader = None
+
+        """
 
     @property
     def split(self):

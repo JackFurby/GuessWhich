@@ -30,3 +30,4 @@ websocket-client==0.57.0
 zope.interface==5.2.0
 boto==2.49.0
 scikit-learn==0.23.2
+scikit-image==0.18.1

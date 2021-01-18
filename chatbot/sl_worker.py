@@ -38,17 +38,16 @@ channel.queue_declare(queue='sl_chatbot_queue', durable=True)
 
 def callback(ch, method, properties, body):
     try:
+        print(body)
         body = yaml.safe_load(body)
         body['history'] = body['history'].split("||||")
 
-        # get the imageid here so that use the extracted features in lua script
-        image_id = body['image_path'].split("/")[-1].replace(".jpg", "")
-
-        print(image_id)
-        print(type(image_id))
+        # get the image url to be process by the agent
+        image_id = body['image_path'].split("/")[-1]
+        image_url = constants.POOL_IMAGES_URL + image_id
 
         result = VisDialATorchModel.abot(
-            image_id, body['history'], body['input_question'])
+            image_url, body['history'], body['input_question'])
         result['input_image'] = body['image_path']
         result['question'] = str(result['question'])
         result['answer'] = str(result['answer'])

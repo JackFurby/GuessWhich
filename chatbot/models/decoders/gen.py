@@ -365,7 +365,8 @@ class Decoder(nn.Module):
 
                 # Find top beamSize logProbs
                 topLogProbs, topIdx = logProbs.topk(beamSize, dim=1)
-                beamTokensTable[:, :, 0] = topIdx.transpose(0, 1).data
+                #beamTokensTable[:, :, 0] = topIdx.transpose(0, 1).data
+                beamTokensTable[:, :, 0] = topIdx.data
                 logProbSums = topLogProbs
 
                 # Repeating hiddenStates 'beamSize' times for subsequent self.rnn calls
@@ -415,7 +416,8 @@ class Decoder(nn.Module):
                 mask_ = aliveVector.eq(0).repeat(1, 1, self.vocabSize)
                 mask_[:, :,
                       0] = 0  # Zeroing all except first row for ended beams
-                minus_infinity_ = torch.min(logProbs).data[0]
+                #minus_infinity_ = torch.min(logProbs).data[0]
+                minus_infinity_ = torch.min(logProbs).data
                 logProbs.data.masked_fill_(mask_.data, minus_infinity_)
 
                 logProbs = logProbs.view(batchSize, -1)
