@@ -23,7 +23,7 @@ from skimage.transform import resize
 
 
 def var_map(tensor):
-    return Variable(tensor.unsqueeze(0), volatile=True)
+    return Variable(tensor.unsqueeze(0))
 
 
 class VisDialModel():
@@ -200,11 +200,8 @@ class VisDialModel():
 
         result = {}
         result['answer'] = to_str_pred(answers[0], ansLens[0])
-        result['question'] = question_asked[0]
+        result['question'] = question_asked
         result['history'] = question_asked + ' ' + to_str_pred(answers[0], ansLens[0])
         result['history'] = result['history'].replace('<START>','')
-
-
-        print(result['answer'])
 
         return result

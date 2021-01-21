@@ -28,7 +28,9 @@ def chatbot(input_question, history, image_path, socketid, bot):
     }
 
     log_to_terminal(
-        socketid, {"terminal": "Publishing job to %s" % (queue_name.upper())})
+        socketid,
+        {"terminal": "Publishing job to %s" % (queue_name.upper())}
+    )
     channel.basic_publish(exchange='',
                           routing_key=queue_name,
                           body=json.dumps(message),

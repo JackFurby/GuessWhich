@@ -18,17 +18,19 @@ r = redis.Redis(host='localhost', port=6379, db=0)
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        # Join room group
-        async_to_sync(self.channel_layer.group_add)(
+        # Join chat group
+        #async_to_sync(self.channel_layer.group_add)(
+        #    "chat",
+        #    self.channel_name
+        #)
+        self.accept()
+
+    def disconnect(self, close_code):
+        # Leave chat group
+        async_to_sync(self.channel_layer.group_discard)(
             "chat",
             self.channel_name
         )
-
-        self.accept()
-
-
-    def disconnect(self, close_code):
-        pass
 
     def receive(self, text_data):
         # Called with either text_data or bytes_data for each frame
@@ -36,12 +38,14 @@ class ChatConsumer(WebsocketConsumer):
 
         body = json.loads(text_data)
 
-        print(body)
-
         if body["event"] == "ConnectionEstablished":
             # Event when the user is connected to the socketio client
             #async_to_sync(body["socketid"]).add(text_data.reply_channel)
             #async_to_sync(self.channel_layer.group_add)("chat", body["socketid"])
+            async_to_sync(self.channel_layer.group_add)(
+                body["socketid"],
+                self.channel_name
+            )
             log_to_terminal(body["socketid"], {
                             "info": "User added to the Channel Group"})
 
@@ -97,3 +101,12 @@ class ChatConsumer(WebsocketConsumer):
                 score=body['bonus'],
                 task=body['task'],
             )
+
+    # Receive message from room group
+    def chat_message(self, event):
+        message = event['message']
+
+        print("Now here:", message)
+
+        # Send message to WebSocket
+        self.send(text_data=message)

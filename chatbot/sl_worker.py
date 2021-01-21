@@ -10,7 +10,6 @@ import django
 django.setup()
 
 from django.conf import settings
-
 from amt.utils import log_to_terminal
 
 import amt.constants as constants
@@ -26,8 +25,6 @@ import requests
 import atexit
 from chatbot.visDialModel import VisDialModel as VisDialModel
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
 VisDialATorchModel = VisDialModel()
 
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -38,7 +35,6 @@ channel.queue_declare(queue='sl_chatbot_queue', durable=True)
 
 def callback(ch, method, properties, body):
     try:
-        print(body)
         body = yaml.safe_load(body)
         body['history'] = body['history'].split("||||")
 
@@ -47,12 +43,16 @@ def callback(ch, method, properties, body):
         image_url = constants.POOL_IMAGES_URL + image_id
 
         result = VisDialATorchModel.abot(
-            image_url, body['history'], body['input_question'])
+            image_url,
+            body['history'],
+            body['input_question']
+        )
         result['input_image'] = body['image_path']
         result['question'] = str(result['question'])
         result['answer'] = str(result['answer'])
         result['history'] = result['history'].replace("<START>", "")
         result['history'] = result['history'].replace("<END>", "")
+
         # Store the result['predicted_fc7'] in the database after each round
         log_to_terminal(body['socketid'], {"result": json.dumps(result)})
         ch.basic_ack(delivery_tag=method.delivery_tag)

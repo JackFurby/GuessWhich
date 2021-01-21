@@ -28,14 +28,14 @@ import boto.mturk.connection
 #    Group(socketid).send({"text": json.dumps(message)})
 
 
-# channels v2
+# channels v3
 def log_to_terminal(socketid, message):
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        '{}'.format(socketid),
+        socketid,
         {
-            'type': 'channel_message',
-            'message': message
+            'type': 'chat_message',
+            'message': json.dumps(message)
         }
     )
 

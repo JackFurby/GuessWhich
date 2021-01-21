@@ -108,8 +108,8 @@
   }
 
   socket.onmessage = function(response) {
-    console.log("on message 1");
     response = JSON.parse(response.data);
+    console.log(response);
     if ("result" in response) {
         result = JSON.parse(response['result']);
         show_bot_message(result['answer']);

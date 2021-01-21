@@ -25,8 +25,6 @@ import requests
 import atexit
 from chatbot.visDialModel import VisDialModel as VisDialModel
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
 RLVisDialATorchModel = VisDialModel()
 
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -40,14 +38,15 @@ def callback(ch, method, properties, body):
         body = yaml.safe_load(body)
         body['history'] = body['history'].split("||||")
 
-        # Get the imageid here so that use the extracted features in lua script
-        image_id = body['image_path'].split("/")[-1].replace(".jpg", "")
+        # get the image url to be process by the agent
+        image_id = body['image_path'].split("/")[-1]
+        image_url = constants.POOL_IMAGES_URL + image_id
 
-        result = RLVisDialATorchModel.answererModel(
-            image_id,
+        result = RLVisDialATorchModel.abot(
+            image_url,
             body['history'],
-            body['input_question'])
-
+            body['input_question']
+        )
         result['question'] = str(result['question'])
         result['answer'] = str(result['answer'])
         result['history'] = result['history']
