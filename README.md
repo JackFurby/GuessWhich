@@ -1,5 +1,14 @@
 # GuessWhich
 
+This code is an updated version of the original GuessWhich game which can be found here: [https://github.com/GT-Vision-Lab/GuessWhich](https://github.com/GT-Vision-Lab/GuessWhich). The model has been replaced with an implementation using Python and Pytorch that can be found here: [https://github.com/vmurahari3/visdial-diversity](https://github.com/vmurahari3/visdial-diversity). The packages in use were up to date as of January 2021.
+
+Thank you to the team at [https://visualdialog.org/](https://visualdialog.org/) who provided support on replacing the original Lua model with the compatible Python implementation.
+
+The code in this repository is believed to be mostly functional. Known issues are as follows:
+* The game ends after the first round
+* The feedback from is not currently accepting input
+* Conversation history may not be correctly passed into the model input
+
 ## Introduction
 
 **Evaluating Visual Conversational Agents via Cooperative Human-AI Games**  
@@ -27,30 +36,12 @@ sudo dnf install protobuf-devel leveldb-devel snappy-devel opencv-devel hdf5-dev
 sudo dnf install postgresql postgresql-contrib postgresql-server openssl-devel
 ```
 
-### Install Torch
+### Create Conda enviroemnt and install pip packages
 
-```shell
-git clone https://github.com/torch/distro.git ~/torch --recursive
-cd ~/torch; bash install-deps;
-./install.sh
-source ~/.bashrc
-```
-
-### Install PyTorch(Python Lua Wrapper)
-
-```shell
-git clone https://github.com/hughperkins/pytorch.git
-cd pytorch
-source ~/torch/install/bin/torch-activate
-./build.sh
-```
-
-
-### Install Pip packages
-
-(update for conda)
+*This has only been tested with Python 3.7*
 
 ```
+conda create -n GuessWhich python=3.7
 pip install -r requirements.txt
 ```
 
@@ -63,19 +54,6 @@ sudo service rabbitmq-server restart
 sudo systemctl start redis.service
 ```
 
-### Lua dependencies
-
-```shell
-luarocks install loadcaffe
-```
-
-The below two dependencies are only required if you are going to use GPU
-
-```shell
-luarocks install cudnn
-luarocks install cunn
-```
-
 ### Cuda Installation
 
 Note: CUDA and cuDNN is only required if you are going to use GPU
@@ -84,14 +62,17 @@ Download and install CUDA and cuDNN from [nvidia website](https://developer.nvid
 
 ### Install dependencies
 
+1. Follow [https://github.com/vmurahari3/visdial-diversity](https://github.com/vmurahari3/visdial-diversity) to train a RL and SL model
+
 ```shell
 git clone https://github.com/Cloud-CV/GuessWhich.git
 cd GuessWhich
 sh download_models.sh
-pip install -r requirements.txt
 ```
 
 ### Create the database
+
+*These parameters may need changeing if this will be accessable over the internet*
 
 ```shell
 sudo postgresql-setup initdb
