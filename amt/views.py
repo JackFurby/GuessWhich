@@ -71,28 +71,19 @@ def home(request, template_name="amt/index.html"):
     turkSubmitTo = request.GET.get('turkSubmitTo')
     bot = request.GET.get('bot')#
 
+    # generate next hit ID
     if hitId is None:
-        args = ImageRanking.objects.values("hit_id")
+        args = ImageRanking.objects.exclude(hit_id="")  # remove any value which is empty
+        args = args.extra(select={'hit_id': 'CAST(hit_id AS INTEGER)'}).values("hit_id")  # convert to int and only keep hit_id
         hitId = int((args.order_by('-hit_id')[0]).get("hit_id")) + 1
 
+    # generate next assignment ID
     if assignmentId is None:
-        args = ImageRanking.objects.values("assignment_id")
+        args = ImageRanking.objects.exclude(assignment_id="")  # remove any value which is empty
+        args = args.extra(select={'assignment_id': 'CAST(assignment_id AS INTEGER)'}).values("assignment_id")  # convert to int and only keep assignment_id
         assignmentId = int((args.order_by('-assignment_id')[0]).get("assignment_id")) + 1
 
-    print(request.build_absolute_uri())
-
-    '''
-    if hitIdChange and assignmentIdChange:
-        return redirect(request.build_absolute_uri(), {"level":level, "hitId":hitId, "assignmentId":assignmentId, "bot":bot, "turkSubmitTo":turkSubmitTo})
-    elif hitIdChange:
-        return redirect(request.build_absolute_uri(), {"level":level, "hitId":hitId, "bot":bot, "turkSubmitTo":turkSubmitTo})
-    elif assignmentIdChange:
-        return redirect(request.build_absolute_uri(), {"level":level, "assignmentId":assignmentId, "bot":bot, "turkSubmitTo":turkSubmitTo})
-    '''
-
     socketid = uuid.uuid4()
-
-    print(request.GET)
 
     # Fetch previous games played by this user
     prev_games_of_this_hit = ImageRanking.objects.filter(assignment_id=assignmentId).filter(worker_id=worker_id).filter(hit_id=hitId).filter(bot=bot)
@@ -100,8 +91,6 @@ def home(request, template_name="amt/index.html"):
     prev_game_ids = [int(i) for i in prev_game_ids]
 
     print(ImageRanking.objects.values("assignment_id", "worker_id", "hit_id", "bot", "game_id"))
-
-    print(socketid)
 
     try:
         # Compute the next GameID to show the new pool of images to play with

@@ -225,7 +225,7 @@ function changeQuestionPlaceholder(placeholder) {
 {% include 'amt/mturk.html' %}
 <script type="text/javascript">
     function proceedToNextGame() {
-        if (gameId != num_of_games_in_a_hit) {
+        if (gameId < num_of_games_in_a_hit) {
           window.location.href = next_game_url;
         } else {
           $("#hitEndModal").modal("open");
@@ -331,7 +331,7 @@ function changeQuestionPlaceholder(placeholder) {
                     message = "You earned "+ current_in_game_bonus +" additional points for guessing the target image correctly " + number_of_correct_guesses_during_dialog + " out of " + (max_rounds+1) + " times during the game. Total points earned is " + current_bonus;
                     show_bot_message(message);
 
-                    if (gameId == num_of_games_in_a_hit) {
+                    if (gameId >= num_of_games_in_a_hit) {
                         message = '<a id="gameEndButton" onClick="proceedToNextGame()" class="btn btn-large blue waves-effect waves-light center">Continue</a>';
                     } else {
                         message = '<a id="gameEndButton" onClick="proceedToNextGame()" class="btn btn-large blue waves-effect waves-light center">Proceed to next game</a>';

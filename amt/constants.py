@@ -35,9 +35,9 @@ RL_VISDIAL_CONFIG = {
     'backend': 'cudnn',
 }
 
-NUMBER_OF_ROUNDS_IN_A_GAME = 2
+NUMBER_OF_ROUNDS_IN_A_GAME = 2  # Number of questions asked per game
 
-NUMBER_OF_GAMES_IN_A_HIT = 3
+NUMBER_OF_GAMES_IN_A_HIT = 1  # Number of games
 
 AWS_ACCESS_KEY_ID = "<Access Key ID>"
 
