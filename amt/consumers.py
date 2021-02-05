@@ -106,7 +106,5 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         message = event['message']
 
-        print("Now here:", message)
-
         # Send message to WebSocket
         self.send(text_data=message)

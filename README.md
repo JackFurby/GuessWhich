@@ -5,8 +5,7 @@ This code is an updated version of the original GuessWhich game which can be fou
 Thank you to the team at [https://visualdialog.org/](https://visualdialog.org/) who provided support on replacing the original Lua model with the compatible Python implementation.
 
 The code in this repository is believed to be mostly functional. Known issues are as follows:
-* The game ends after the first round
-* The feedback from is not currently accepting input
+* The feedback form is not currently accepting input
 * Conversation history may not be correctly passed into the model input
 
 ## Introduction

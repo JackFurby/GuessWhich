@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.db.models import Sum
 
@@ -69,23 +69,39 @@ def home(request, template_name="amt/index.html"):
     hitId = request.GET.get('hitId')
     assignmentId = request.GET.get('assignmentId')
     turkSubmitTo = request.GET.get('turkSubmitTo')
-    bot = request.GET.get('bot')
+    bot = request.GET.get('bot')#
 
-    print(level, hitId, assignmentId, bot)
+    if hitId is None:
+        args = ImageRanking.objects.values("hit_id")
+        hitId = int((args.order_by('-hit_id')[0]).get("hit_id")) + 1
+
+    if assignmentId is None:
+        args = ImageRanking.objects.values("assignment_id")
+        assignmentId = int((args.order_by('-assignment_id')[0]).get("assignment_id")) + 1
+
+    print(request.build_absolute_uri())
+
+    '''
+    if hitIdChange and assignmentIdChange:
+        return redirect(request.build_absolute_uri(), {"level":level, "hitId":hitId, "assignmentId":assignmentId, "bot":bot, "turkSubmitTo":turkSubmitTo})
+    elif hitIdChange:
+        return redirect(request.build_absolute_uri(), {"level":level, "hitId":hitId, "bot":bot, "turkSubmitTo":turkSubmitTo})
+    elif assignmentIdChange:
+        return redirect(request.build_absolute_uri(), {"level":level, "assignmentId":assignmentId, "bot":bot, "turkSubmitTo":turkSubmitTo})
+    '''
 
     socketid = uuid.uuid4()
 
     print(request.GET)
 
     # Fetch previous games played by this user
-    prev_games_of_this_hit = ImageRanking.objects.filter(
-        assignment_id=assignmentId, worker_id=worker_id, hit_id=hitId, bot=bot)
+    prev_games_of_this_hit = ImageRanking.objects.filter(assignment_id=assignmentId).filter(worker_id=worker_id).filter(hit_id=hitId).filter(bot=bot)
     prev_game_ids = prev_games_of_this_hit.values_list('game_id', flat=True)
     print("IM HERE -", prev_games_of_this_hit)
     print("IM HERE -", prev_game_ids)
     prev_game_ids = [int(i) for i in prev_game_ids]
 
-    print(ImageRanking.objects.values("game_id", "socket_id", "bot"))
+    print(ImageRanking.objects.values("assignment_id", "worker_id", "hit_id", "bot", "game_id"))
 
     print(socketid)
 
@@ -155,6 +171,9 @@ def home(request, template_name="amt/index.html"):
         "next_game_id": next_game_id,
         "bonus_for_correct_image_after_each_round": constants.BONUS_FOR_CORRECT_IMAGE_AFTER_EACH_ROUND,
         "show_feedback_modal": show_feedback_modal,
+        "hitId": hitId,
+        "assignmentId": assignmentId,
+        "worker_id": worker_id,
     })
 
 

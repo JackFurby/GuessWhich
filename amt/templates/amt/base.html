@@ -295,6 +295,17 @@
   <script type="text/javascript">
   var mode = null;
 
+  function updateQueryStringParameter(uri, key, value) {
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+      return uri.replace(re, '$1' + key + "=" + value + '$2');
+    }
+    else {
+      return uri + separator + key + "=" + value;
+    }
+  }
+
   function selectBot(type) {
     updated_url = updateQueryStringParameter(window.location.href, 'bot', type);
     window.location.href = updated_url;
@@ -320,6 +331,9 @@
   var gameId = {{ next_game_id }};
   var bot = getParameterByName("bot");
   var level = getParameterByName("level");
+  var hitId = getParameterByName("hitId");
+  var assignmentId = getParameterByName("assignmentId");
+  var workerId = getParameterByName("workerId");
 
   if (level == ""){
     level = "medium";
@@ -327,6 +341,22 @@
 
   if (bot == ""){
     level = "sl";
+  }
+
+  // This is a hack, no idea how it worked before but this add important vars to GET params
+  if (hitId == null) {
+    updated_url = updateQueryStringParameter(window.location.href, 'hitId', "{{hitId}}");
+    window.location.href = updated_url;
+  }
+
+  if (assignmentId == null) {
+    updated_url = updateQueryStringParameter(window.location.href, 'assignmentId', "{{assignmentId}}");
+    window.location.href = updated_url;
+  }
+
+  if (workerId == null) {
+    updated_url = updateQueryStringParameter(window.location.href, 'workerId', "{{worker_id}}");
+    window.location.href = updated_url;
   }
 
   $(document).ready(function(){
@@ -352,17 +382,5 @@
   });
 
   </script>
-<script type="text/javascript">
-  function updateQueryStringParameter(uri, key, value) {
-  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-  var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-  if (uri.match(re)) {
-    return uri.replace(re, '$1' + key + "=" + value + '$2');
-  }
-  else {
-    return uri + separator + key + "=" + value;
-  }
-}
-</script>
 </body>
 </html>

@@ -29,8 +29,6 @@ SL_VISDIAL_CONFIG = {
     'backend': 'cudnn',
 }
 
-SL_VISDIAL_LUA_PATH = "sl_evaluate.lua"
-
 
 RL_VISDIAL_CONFIG = {
     #'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/qbot_rl.t7'),
@@ -41,11 +39,9 @@ RL_VISDIAL_CONFIG = {
     'backend': 'cudnn',
 }
 
-RL_VISDIAL_LUA_PATH = "rl_evaluate.lua"
+NUMBER_OF_ROUNDS_IN_A_GAME = 2
 
-NUMBER_OF_ROUNDS_IN_A_GAME = 9
-
-NUMBER_OF_GAMES_IN_A_HIT = 1
+NUMBER_OF_GAMES_IN_A_HIT = 2
 
 AWS_ACCESS_KEY_ID = "<Access Key ID>"
 
