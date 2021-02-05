@@ -226,7 +226,7 @@ function changeQuestionPlaceholder(placeholder) {
 <script type="text/javascript">
     function proceedToNextGame() {
         if (gameId != num_of_games_in_a_hit) {
-          location.reload();
+          window.location.href = next_game_url;
         } else {
           $("#hitEndModal").modal("open");
         }
@@ -317,6 +317,10 @@ function changeQuestionPlaceholder(placeholder) {
 
                     gameId = Number(gameId) + 1;
                     next_game_url = updateQueryStringParameter(window.location.href, 'gameId', gameId);
+                    next_game_url = updateQueryStringParameter(next_game_url, 'hit_id', hit_id);
+                    next_game_url = updateQueryStringParameter(next_game_url, 'assignmentId', assignment_id);
+                    next_game_url = updateQueryStringParameter(next_game_url, 'workerId', worker_id);
+
 
                     changeQuestionPlaceholder("Click above button to proceed.");
                     $(".selectImage").attr('style','display:none !important');

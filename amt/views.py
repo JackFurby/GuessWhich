@@ -97,8 +97,6 @@ def home(request, template_name="amt/index.html"):
     # Fetch previous games played by this user
     prev_games_of_this_hit = ImageRanking.objects.filter(assignment_id=assignmentId).filter(worker_id=worker_id).filter(hit_id=hitId).filter(bot=bot)
     prev_game_ids = prev_games_of_this_hit.values_list('game_id', flat=True)
-    print("IM HERE -", prev_games_of_this_hit)
-    print("IM HERE -", prev_game_ids)
     prev_game_ids = [int(i) for i in prev_game_ids]
 
     print(ImageRanking.objects.values("assignment_id", "worker_id", "hit_id", "bot", "game_id"))

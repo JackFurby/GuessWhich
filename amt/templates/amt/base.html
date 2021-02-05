@@ -331,9 +331,6 @@
   var gameId = {{ next_game_id }};
   var bot = getParameterByName("bot");
   var level = getParameterByName("level");
-  var hitId = getParameterByName("hitId");
-  var assignmentId = getParameterByName("assignmentId");
-  var workerId = getParameterByName("workerId");
 
   if (level == ""){
     level = "medium";
@@ -341,22 +338,6 @@
 
   if (bot == ""){
     level = "sl";
-  }
-
-  // This is a hack, no idea how it worked before but this add important vars to GET params
-  if (hitId == null) {
-    updated_url = updateQueryStringParameter(window.location.href, 'hitId', "{{hitId}}");
-    window.location.href = updated_url;
-  }
-
-  if (assignmentId == null) {
-    updated_url = updateQueryStringParameter(window.location.href, 'assignmentId', "{{assignmentId}}");
-    window.location.href = updated_url;
-  }
-
-  if (workerId == null) {
-    updated_url = updateQueryStringParameter(window.location.href, 'workerId', "{{worker_id}}");
-    window.location.href = updated_url;
   }
 
   $(document).ready(function(){

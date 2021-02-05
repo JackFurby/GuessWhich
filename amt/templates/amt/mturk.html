@@ -12,6 +12,19 @@ var hit_id = gup('hitId');
 var assignment_id = gup('assignmentId');
 var worker_id = gup('workerId');
 
+if (assignment_id == "") {
+  assignment_id = {{assignmentId}};
+}
+
+if (worker_id == "") {
+  worker_id = "{{worker_id}}";
+}
+
+if (hit_id == "") {
+  hit_id = {{hitId}};
+}
+
+
 document.getElementById('assignmentId').value = assignment_id;
 document.getElementById('workerId').value = worker_id;
 

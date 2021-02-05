@@ -21,8 +21,6 @@ BOT_INTORDUCTION_MESSAGE = [
 ]
 
 SL_VISDIAL_CONFIG = {
-    #'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/qbot_hre_qih_sl.t7'),
-    #'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/abot_hre_qih_sl.t7'),
     'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/sl_qbot.vd'),
     'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/sl_abot.vd'),
     'gpuid': 0,
@@ -31,8 +29,6 @@ SL_VISDIAL_CONFIG = {
 
 
 RL_VISDIAL_CONFIG = {
-    #'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/qbot_rl.t7'),
-    #'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/abot_rl.t7'),
     'qBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/rl_qbot_rl.vd'),
     'aBotpath': os.path.join(settings.BASE_DIR, 'chatbot/data/rl_abot_rl.vd'),
     'gpuid': 0,
@@ -41,7 +37,7 @@ RL_VISDIAL_CONFIG = {
 
 NUMBER_OF_ROUNDS_IN_A_GAME = 2
 
-NUMBER_OF_GAMES_IN_A_HIT = 2
+NUMBER_OF_GAMES_IN_A_HIT = 3
 
 AWS_ACCESS_KEY_ID = "<Access Key ID>"
 
