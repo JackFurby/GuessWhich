@@ -243,14 +243,14 @@
 
   <div class="navbar-fixed">
     <ul id="dropdownSelectDifficulty" class="dropdown-content">
-      <li><a href="?level=easy">Easy</a></li>
-      <li><a href="?level=medium">Medium</a></li>
-      <li><a href="?level=hard">Hard</a></li>
+      <li><a onClick="selectDifficulty('easy')">Easy</a></li>
+      <li><a onClick="selectDifficulty('medium')">Medium</a></li>
+      <li><a onClick="selectDifficulty('hard')">Hard</a></li>
     </ul>
 
-    <ul id="dropdownSelectMode" class="dropdown-content">
-      <li><a href="?mode=random">Random</a></li>
-      <li><a href="?mode=sequential">Normal</a></li>
+    <ul id="dropdownSelectBot" class="dropdown-content">
+      <li><a onClick="selectBot('sl')">Standard Learning</a></li>
+      <li><a onClick="selectBot('rl')">Reinforcement Learning</a></li>
     </ul>
 
     <nav class="nav-wrapper">
@@ -260,11 +260,11 @@
 
         <!-- Dropdown Triggers -->
         <li><a class="dropdown-button" href="#!" data-activates="dropdownSelectDifficulty">Select Difficulty<i class="material-icons right">arrow_drop_down</i></a></li>
-        <li><a class="dropdown-button" href="#!" data-activates="dropdownSelectMode">Select Mode<i class="material-icons right">arrow_drop_down</i></a></li>
+        <li><a class="dropdown-button" href="#!" data-activates="dropdownSelectBot">Select Bot<i class="material-icons right">arrow_drop_down</i></a></li>
 
         <li style="padding-right: 25px;"><span>Total points earned: </span><b id="total_bonus_so_far">{{ total_bonus_so_far }}</b></li>
         <li style="padding-right: 25px;"><span>Possible points for this game: </span><b id="bonus_for_this_game">{{ max_game_bonus }}</b></li>
-        <!-- <li id="gameRound" style="padding-right: 25px;"></li> -->
+        <li id="gameRound" style="padding-right: 25px;"></li>
       </ul>
     </nav>
   </div>
@@ -295,6 +295,16 @@
   <script type="text/javascript">
   var mode = null;
 
+  function selectBot(type) {
+    updated_url = updateQueryStringParameter(window.location.href, 'bot', type);
+    window.location.href = updated_url;
+  }
+
+  function selectDifficulty(type) {
+    updated_url = updateQueryStringParameter(window.location.href, 'level', type);
+    window.location.href = updated_url;
+  }
+
   function getParameterByName(name, url) {
     if (!url) {
       url = window.location.href;
@@ -313,6 +323,10 @@
 
   if (level == ""){
     level = "medium";
+  }
+
+  if (bot == ""){
+    level = "sl";
   }
 
   $(document).ready(function(){

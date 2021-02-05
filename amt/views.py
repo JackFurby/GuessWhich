@@ -71,13 +71,23 @@ def home(request, template_name="amt/index.html"):
     turkSubmitTo = request.GET.get('turkSubmitTo')
     bot = request.GET.get('bot')
 
+    print(level, hitId, assignmentId, bot)
+
     socketid = uuid.uuid4()
+
+    print(request.GET)
 
     # Fetch previous games played by this user
     prev_games_of_this_hit = ImageRanking.objects.filter(
         assignment_id=assignmentId, worker_id=worker_id, hit_id=hitId, bot=bot)
     prev_game_ids = prev_games_of_this_hit.values_list('game_id', flat=True)
+    print("IM HERE -", prev_games_of_this_hit)
+    print("IM HERE -", prev_game_ids)
     prev_game_ids = [int(i) for i in prev_game_ids]
+
+    print(ImageRanking.objects.values("game_id", "socket_id", "bot"))
+
+    print(socketid)
 
     try:
         # Compute the next GameID to show the new pool of images to play with

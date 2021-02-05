@@ -60,6 +60,6 @@ def callback(ch, method, properties, body):
         print(str(traceback.print_exc()))
 
 
-channel.basic_consume('sl_chatbot_queue', callback)
+channel.basic_consume('rl_chatbot_queue', callback)
 
 channel.start_consuming()

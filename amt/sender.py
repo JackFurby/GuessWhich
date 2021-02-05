@@ -12,11 +12,12 @@ def chatbot(input_question, history, image_path, socketid, bot):
         host='localhost'))
     channel = connection.channel()
 
-    queue_name = 'sl_chatbot_queue'
     if bot == "sl":
         queue_name = "sl_chatbot_queue"
     elif bot == "rl":
         queue_name = "rl_chatbot_queue"
+    else:
+        queue_name = 'sl_chatbot_queue'
 
     channel.queue_declare(queue=queue_name, durable=True)
     message = {

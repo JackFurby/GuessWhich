@@ -225,13 +225,10 @@ function changeQuestionPlaceholder(placeholder) {
 {% include 'amt/mturk.html' %}
 <script type="text/javascript">
     function proceedToNextGame() {
-        // console.log(gameId);
         if (gameId != num_of_games_in_a_hit) {
-            // console.log("THIS IS FUCKING WORKING");
-            // $("#hitEndModal").modal('open');
-            location.reload();
+          location.reload();
         } else {
-            $("#hitEndModal").modal("open");
+          $("#hitEndModal").modal("open");
         }
     }
     $("#hitEndButton").click(function () {
@@ -245,6 +242,7 @@ function changeQuestionPlaceholder(placeholder) {
             $(".selectImage").parent().removeClass("highlight-image");
 
             if (!finalImageSelected) {
+              console.log("still images to select!");
                 $(this).parent().addClass("highlight-image");
                 current_user_selected_image = $(this).parent().attr('id');
                 // console.log("CURRENT SELECTED IMAGE IS " + current_user_selected_image);
@@ -319,7 +317,7 @@ function changeQuestionPlaceholder(placeholder) {
 
                     gameId = Number(gameId) + 1;
                     next_game_url = updateQueryStringParameter(window.location.href, 'gameId', gameId);
-                    // $("#plotModal").modal('open');
+
                     changeQuestionPlaceholder("Click above button to proceed.");
                     $(".selectImage").attr('style','display:none !important');
                     message = "Thanks for playing the game.<br> The target image is <img src='{{ target_image }}' height='300px' width='300px'>";

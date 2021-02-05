@@ -72,7 +72,7 @@ sh download_models.sh
 
 ### Create the database
 
-*These parameters may need changeing if this will be accessable over the internet*
+*These parameters may need changing if this will be accessible over the internet*
 
 ```shell
 sudo postgresql-setup initdb
