@@ -99,10 +99,8 @@ class VisDialModel():
         ############################################# history and question as JSON???????????
         ############################################# Do I need to change the JSON format???????
 
-        print("history:", history)
         print("question:", question_asked)
 
-        history = {"caption": history[0], "dialog": []}  # THIS NEEDS UPDATING TO THE PROPER FORMAT https://github.com/batra-mlp-lab/visdial-rl/blob/master/demo/hist.json
         question = {"question": question_asked}  # THIS NEEDS UPDATING TO THE PROPER FORMAT https://github.com/batra-mlp-lab/visdial-rl/blob/master/demo/ques.json
 
         print("history:", history)
@@ -198,10 +196,16 @@ class VisDialModel():
         answers, ansLens = self.answererModel.forwardDecode(
             inference='greedy', beamSize=beamSize)
 
+        # Convert history into a string that can be stored on the web page (This is a hack)
+        hist_out = history['caption'] + '||||'
+        for i in history['dialog']:
+            hist_out = hist_out + i["question"] + "~~~~" + i["answer"] + "||||"
+        hist_out = hist_out + question_asked + "~~~~" + to_str_pred(answers[0], ansLens[0])
+
         result = {}
         result['answer'] = to_str_pred(answers[0], ansLens[0])
         result['question'] = question_asked
-        result['history'] = question_asked + ' ' + to_str_pred(answers[0], ansLens[0])
+        result['history'] = hist_out
         result['history'] = result['history'].replace('<START>','')
 
         return result

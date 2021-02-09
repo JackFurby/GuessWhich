@@ -37,6 +37,14 @@ def callback(ch, method, properties, body):
     try:
         body = yaml.safe_load(body)
         body['history'] = body['history'].split("||||")
+        caption = body['history'].pop(0)  # First item in history is image caption
+        dialog = []
+        # seperate question and answer history
+        for i in body['history']:
+            i = i.split("~~~~")
+            dialog.append({"question": i[0], "answer": i[1]})
+
+        history = {"caption": caption, "dialog": dialog}
 
         # get the image url to be process by the agent
         image_id = body['image_path'].split("/")[-1]
